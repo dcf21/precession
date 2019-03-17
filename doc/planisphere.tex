@@ -1,0 +1,183 @@
+% planisphere.tex
+%
+% The LaTeX code in this file brings together into a single document the
+% various components of the precession planisphere.
+%
+% Copyright (C) 2019 Dominic Ford <dcf21-www@dcford.org.uk>
+%
+% This code is free software; you can redistribute it and/or modify it under
+% the terms of the GNU General Public License as published by the Free Software
+% Foundation; either version 2 of the License, or (at your option) any later
+% version.
+%
+% You should have received a copy of the GNU General Public License along with
+% this file; if not, write to the Free Software Foundation, Inc., 51 Franklin
+% Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+% ----------------------------------------------------------------------------
+
+\documentclass[a4paper,onecolumn,10pt]{article}
+\usepackage[dvips]{graphicx}
+\usepackage{fancyhdr,url}
+\usepackage{parskip}
+\usepackage[pdftitle={Build a precession planisphere}, pdfauthor={Dominic Ford}, pdfsubject={Build a precession planisphere}, pdfkeywords={Build a precession planisphere}, colorlinks=true, linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue]{hyperref}
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{fancy}
+
+\lhead{\it DEMONSTRATING THE PRECESSION OF THE EQUINOXES}
+\chead{}
+\rhead{\thepage}
+\lfoot{}\rfoot{}
+\cfoot{\bf\footnotesize\copyright\ 2019 Dominic Ford. Distributed under the GNU General Public License, version 3. Document downloaded from \url{https://in-the-sky.org/precession/}}
+
+\fancypagestyle{plain}{%
+\fancyhf{} % clear all header and footer fields
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+
+\title{Demonstrating the precession of the equinoxes with a planisphere}
+\author{Dominic Ford}
+\date{March 2019}
+
+\begin{document}
+\maketitle
+\setcounter{footnote}{1}
+
+The precession of the equinoxes is a gradual changing in the direction of the
+Earth's rotation axis, which causes the position of the celestial poles to
+drift through the constellations at a continuous rate of roughly 20 arcseconds
+per year. Although this effect is small on short timescales, the accumulated
+drift adds up to about one Moon diameter per century.
+
+Currently the Earth's north celestial pole points close to the star Polaris,
+but this will not always be the case.  By 2500, Polaris will be several degrees
+away from the true celestial pole.
+
+A conventional planisphere is a simple hand-held device which shows a map of
+which stars are visible in the night sky at any particular time. By adapting
+the design of the planisphere, it is possible to build a similar instrument
+which, instead of demonstrating the rotation of the night sky around the
+celestial poles, instead demonstrates the movement of the celestial poles due
+to the precession of the equinoxes.
+
+I have created kits for building two models of planisphere for demonstrating
+the precession of the equinoxes. One shows the effect of the precession of the
+equinoxes on the northern sky.  Specifically, it shows the precession of the
+north celestial pole through the northern sky. The other shows the effect of
+the precession of the equinoxes on the southern sky.
+
+You can download these here
+
+\url{https://in-the-sky.org/precession/}
+
+The planisphere presented in this document is designed to show the
+\input{tmp/lat} sky.
+ 
+\section*{What you need}
+
+\begin{itemize}
+\item Two sheets of A4 paper, or preferably thin card.
+\item Scissors.
+\item A split-pin fastener.
+\item Optional: one sheet of transparent plastic, e.g. acetate designed for use with overhead projectors.
+\item Optional: A little glue.
+\end{itemize}
+
+\section*{Assembly instructions}
+
+{\bf Step 1} -- Print the pages at the back of this PDF file, showing the
+star wheel and the body of the planisphere, onto two separate sheets of paper,
+or more preferably onto thin card.
+
+{\bf Step 2} -- Carefully cut out the star wheel and the body of the
+planisphere. Also cut out the shaded grey area of the planisphere's body, and
+if you have it, the grid of lines which you have printed onto transparent
+plastic. If you are using cardboard, you may wish to carefully score the body
+of the planisphere along the dotted line to make it easier to fold it along
+this line later.
+
+{\bf Step 3} -- The star wheel has a small circle at its center, and the
+planisphere's body has a matching small circle at the bottom. Make a small hole
+(about 2mm across) in each. If a paper drill is to hand, these are ideal,
+otherwise use a compass point and enlarge the hole by turning in a circular
+motion.
+
+{\bf Step 4} -- Slot a split-pin fastener through the middle of the
+star wheel, with the head of the fastener against the printed side of the
+star wheel. Then slot the body of the planisphere onto the same fastener, with
+the printed side facing the back of the fastener. Fold the fastener down to
+secure the two sheets of cardboard together.
+
+{\bf Step 5 (Optional)} -- If you printed the final page of the PDF file
+onto a sheet of plastic, you should now stick this grid of lines over the
+viewing window which you cut out from the body of the planisphere.
+
+{\bf Step 6} -- Fold the body of the planisphere along the dotted line,
+so that the front of the star wheel shows through the window which you cut in
+the body.
+
+{\bf Congratulations, your planisphere is now ready to demonstrate the
+precession of the equinoxes!}
+
+\section*{How to use your planisphere}
+
+On this special design of planisphere, the sky is projected onto the star wheel
+with the north ecliptic pole at the center. The grey lines marked onto the
+transparent plastic window indicate the right ascension and declination of the
+stars behind.
+
+As the star wheel is rotated, the position of the north celestial pole turns in
+circles around the ecliptic pole, simulating how the celestial coordinates of
+stars change over time due to the precession of the equinoxes.
+
+Turn the starwheel until the arrow on its edge lines up with the scale of years
+marked around the top of the planisphere. The viewing window will now show all
+of the stars in the celestial northern or southern hemisphere in this year.
+
+You can read off the changing celestial coordinates of stars over time using
+the grid of lines of constant right ascension and declination marked onto the
+transparent plastic window.
+
+\section*{Customised planispheres}
+
+This planisphere kit was designed using a collection of Python scripts and the
+pycairo graphics library. If you would like to customise your planisphere, you
+are welcome to download the scripts from my GitHub account and modify them,
+providing you credit the source:
+
+\url{https://github.com/dcf21/precession}
+
+\section*{License}
+
+Like everything else on {\tt In-The-Sky.org}, these planisphere kits are
+\copyright\ Dominic Ford. However, everything on {\tt In-The-Sky.org} is
+provided for the benefit of amateur astronomers worldwide, and you are welcome
+to modify and/or redistribute any of the material on this website, under the
+following conditions: (1) Any item that has an associated copyright text {\bf
+must} include that {\bf unmodified} text in your redistributed version, (2) You
+{\bf must} credit me, Dominic Ford, as the original author and copyright
+holder, (3) You {\bf may not} derive any profit from your reproduction of
+material on this website, {\bf unless} you are a registered charity whose
+express aim is the advancement of astronomical science, {\bf or} you have the
+written permission of the author.
+
+\newpage
+
+\centerline{\includegraphics{tmp/starwheel}}
+
+\vspace{1cm}
+The planisphere's central star wheel, which should be sandwiched inside the folded holder.
+
+\newpage
+\thispagestyle{empty}
+\vspace*{-3.0cm}
+\centerline{\includegraphics{tmp/holder}}
+\newpage
+
+\centerline{\includegraphics{tmp/ra_dec}}
+
+\vspace{1cm}
+This grid of lines can optionally be printed onto transparent plastic and glued into the cut out window in the planisphere's body to show the changing right ascensions and declinations of objects in the sky.
+
+\end{document}
+
