@@ -4,7 +4,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2019 Dominic Ford <dcf21-www@dcford.org.uk>
+# Copyright (C) 2014-2020 Dominic Ford <dcf21-www@dcford.org.uk>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -33,7 +33,7 @@ text = {
                 r"",
                 r"As the star wheel is rotated, the position of the north celestial pole turns in circles around the ecliptic pole, simulating how the celestial coordinates of stars change over time due to the precession of the equinoxes.",
                 r""),
-            "more_info": "For more information, see https://in-the-sky.org/precession       \u00A9 Dominic Ford 2019.",
+            "more_info": "For more information, see https://in-the-sky.org/precession       \u00A9 Dominic Ford 2020.",
             "glue_here": "GLUE HERE",
             "cut_out_instructions": (
                 "Cut out this shaded area with scissors.",
