@@ -5,7 +5,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2020 Dominic Ford <dcf21-www@dcford.org.uk>
+# Copyright (C) 2014-2021 Dominic Ford <dcf21-www@dcford.org.uk>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -188,7 +188,7 @@ class Holder(BaseComponent):
         # Write the years
         for year in arange(-4000, 8000, 1000):
             txt = "{:d}{}".format(abs(year), "CE" if (year >= 0) else "BCE")
-            t = unit_rev / 25772 * (year-2000) * (-1 if not is_southern else 1)
+            t = unit_rev / 25772 * (year-2000) * (-1 if is_southern else 1)
 
             # Stroke a dash and write the number of the hour
             context.begin_path()
