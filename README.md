@@ -1,8 +1,8 @@
 ## Make a planisphere to demonstrate the precession of the equinoxes
 
-See https://in-the-sky.org/precession/index.php for more information.
+This repository contains Python scripts that can be used to produce a cut-and-glue kit which allows you to make a cardboard model which demonstrates the precession of the astronomical equinoxes.
 
-To make the default planisphere models, run the shell script `main_planisphere.sh`.
+Full details of this cardboard model, including assembly instructions can be found here: <https://in-the-sky.org/precession/>.
 
 ### Further information
 
@@ -29,7 +29,13 @@ equinoxes on the northern sky.  Specifically, it shows the precession of the
 north celestial pole through the northern sky. The other shows the effect of
 the precession of the equinoxes on the southern sky.
 
-You can download these here
+You can download these here: <https://in-the-sky.org/precession/>
 
-https://in-the-sky.org/precession/
+## Getting started
+
+To make the default planisphere models, run the shell script `main_planisphere.sh`.
+
+## Author
+
+This code was developed by Dominic Ford <https://dcford.org.uk>. It is distributed under the Gnu General Public License V3.
 
