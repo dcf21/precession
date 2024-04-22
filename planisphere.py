@@ -5,7 +5,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2023 Dominic Ford <https://dcford.org.uk/>
+# Copyright (C) 2014-2024 Dominic Ford <https://dcford.org.uk/>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -43,17 +43,19 @@ from starwheel import StarWheel
 os.system("rm -Rf output")
 os.system("mkdir -p output/planispheres output/planisphere_parts")
 
-arguments = fetch_command_line_arguments()
-theme = arguments['theme']
+arguments: dict[str, int | str] = fetch_command_line_arguments()
+theme: str = arguments['theme']
 
 # Render planisphere in all available languages
+language: str
 for language in text.text:
 
     # Render climates for both northern and southern hemispheres
+    southern: bool
     for southern in [False, True]:
 
         # A dictionary of common substitutions
-        subs = {
+        subs: dict[str, str | float] = {
             'dir_parts': 'output/planisphere_parts',
             'dir_out': 'output/planispheres',
             'ns': "S" if southern else "N",
@@ -61,7 +63,7 @@ for language in text.text:
             'lang': language,
         }
 
-        settings = {
+        settings: dict[str, str | bool] = {
             'language': language,
             'southern': southern,
             'theme': theme

@@ -5,7 +5,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2023 Dominic Ford <https://dcford.org.uk/>
+# Copyright (C) 2014-2024 Dominic Ford <https://dcford.org.uk/>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -27,7 +27,7 @@ from math import pi, sin, cos, atan2, asin, hypot
 
 from bright_stars_process import fetch_bright_star_list
 from constants import unit_deg, unit_rev, unit_mm, unit_cm, inclination_ecliptic, r_1, r_gap, central_hole_size, radius
-from graphics_context import BaseComponent
+from graphics_context import BaseComponent, GraphicsContext
 from settings import fetch_command_line_arguments
 from text import text
 from themes import themes
@@ -38,13 +38,13 @@ class StarWheel(BaseComponent):
     Render the star wheel for the precession planisphere.
     """
 
-    def default_filename(self):
+    def default_filename(self) -> str:
         """
         Return the default filename to use when saving this component.
         """
         return "star_wheel"
 
-    def bounding_box(self, settings):
+    def bounding_box(self, settings: dict) -> dict[str, float]:
         """
         Return the bounding box of the canvas area used by this component.
 
@@ -61,27 +61,27 @@ class StarWheel(BaseComponent):
         }
 
     @staticmethod
-    def ra_dec_to_ecliptic_coordinates(ra, dec):
+    def ra_dec_to_ecliptic_coordinates(ra: float, dec: float) -> tuple[float, float]:
         ra = float(ra)
         dec = float(dec)
 
-        hr = pi / 12
-        deg = pi / 180
+        hr: float = pi / 12
+        deg: float = pi / 180
 
-        x = cos(ra * hr) * cos(dec * deg)
-        y = sin(ra * hr) * cos(dec * deg)
-        z = sin(dec * deg)
+        x: float = cos(ra * hr) * cos(dec * deg)
+        y: float = sin(ra * hr) * cos(dec * deg)
+        z: float = sin(dec * deg)
 
-        x2 = x
-        y2 = y * cos(inclination_ecliptic * deg) + z * sin(inclination_ecliptic * deg)
-        z2 = -y * sin(inclination_ecliptic * deg) + z * cos(inclination_ecliptic * deg)
+        x2: float = x
+        y2: float = y * cos(inclination_ecliptic * deg) + z * sin(inclination_ecliptic * deg)
+        z2: float = -y * sin(inclination_ecliptic * deg) + z * cos(inclination_ecliptic * deg)
 
-        lat = asin(z2) / deg
-        lng = atan2(y2, x2) / deg
+        lat: float = asin(z2) / deg
+        lng: float = atan2(y2, x2) / deg
 
         return lng, lat
 
-    def do_rendering(self, settings, context):
+    def do_rendering(self, settings: dict, context: GraphicsContext) -> None:
         """
         This method is required to actually render this item.
 
@@ -93,20 +93,20 @@ class StarWheel(BaseComponent):
             None
         """
 
-        is_southern = settings['southern']
-        language = settings['language']
-        latitude = 90 - inclination_ecliptic
-        theme = themes[settings['theme']]
+        is_southern: bool = settings['southern']
+        language: str = settings['language']
+        latitude: float = 90 - inclination_ecliptic
+        theme: dict[str, tuple[float, float, float, float]] = themes[settings['theme']]
 
         context.set_font_size(1.2)
 
         # Radius of outer edge of star chart
-        r_2 = r_1 - r_gap
+        r_2: float = r_1 - r_gap
 
         # Radius of tip / base of arrow for lining up with year scale
-        r_4 = r_2 * 0.8 + r_1 * 0.2
-        r_5 = r_2 * 0.5 + r_1 * 0.5
-        r_6 = r_2 * 0.3 + r_1 * 0.7
+        r_4: float = r_2 * 0.8 + r_1 * 0.2
+        r_5: float = r_2 * 0.5 + r_1 * 0.5
+        r_6: float = r_2 * 0.3 + r_1 * 0.7
 
         # Draw the outer edge of planisphere
         context.begin_path()
@@ -122,11 +122,12 @@ class StarWheel(BaseComponent):
         context.clip()
 
         # Draw lines of constant ecliptic latitude for path of north pole
+        lat: float
         for lat in (90 - inclination_ecliptic,
                     0,
                     -90 + inclination_ecliptic):
             # Convert latitude into radius from the centre of the planisphere
-            r = radius(dec=lat, latitude=latitude)
+            r: float = radius(dec=lat, latitude=latitude)
             if r > r_2:
                 continue
             context.begin_path()
@@ -136,7 +137,7 @@ class StarWheel(BaseComponent):
         # Draw constellation stick figures
         with open("raw_data/constellation_stick_figures.dat", "rt") as f_in:
             for line in f_in:
-                line = line.strip()
+                line: str = line.strip()
 
                 # Ignore blank lines and comment lines
                 if (len(line) == 0) or (line[0] == '#'):
@@ -144,10 +145,19 @@ class StarWheel(BaseComponent):
 
                 # Split line into words.
                 # These are the names of the constellations, and the start and end points for each stroke.
-                name, ra1, dec1, ra2, dec2 = line.split()
+                name: str
+                ra1_str: str
+                dec1_str: str
+                ra2_str: str
+                dec2_str: str
+                name, ra1_str, dec1_str, ra2_str, dec2_str = line.split()
 
-                lng1, lat1 = self.ra_dec_to_ecliptic_coordinates(ra=float(ra1) * 12 / 180, dec=dec1)
-                lng2, lat2 = self.ra_dec_to_ecliptic_coordinates(ra=float(ra2) * 12 / 180, dec=dec2)
+                lng1: float
+                lat1: float
+                lng2: float
+                lat2: float
+                lng1, lat1 = self.ra_dec_to_ecliptic_coordinates(ra=float(ra1_str) * 12 / 180, dec=float(dec1_str))
+                lng2, lat2 = self.ra_dec_to_ecliptic_coordinates(ra=float(ra2_str) * 12 / 180, dec=float(dec2_str))
 
                 # If we're making a southern hemisphere planisphere, we flip the sky upside down
                 if is_southern:
@@ -157,16 +167,16 @@ class StarWheel(BaseComponent):
                     lat2 *= -1
 
                 # Project RA and Dec into radius and azimuth in the planispheric projection
-                r_point_1 = radius(dec=lat1, latitude=latitude)
+                r_point_1: float = radius(dec=lat1, latitude=latitude)
                 if r_point_1 > r_2:
                     continue
 
-                r_point_2 = radius(dec=lat2, latitude=latitude)
+                r_point_2: float = radius(dec=lat2, latitude=latitude)
                 if r_point_2 > r_2:
                     continue
 
-                p1 = (-r_point_1 * cos(lng1 * unit_deg), -r_point_1 * sin(lng1 * unit_deg))
-                p2 = (-r_point_2 * cos(lng2 * unit_deg), -r_point_2 * sin(lng2 * unit_deg))
+                p1: tuple[float, float] = (-r_point_1 * cos(lng1 * unit_deg), -r_point_1 * sin(lng1 * unit_deg))
+                p2: tuple[float, float] = (-r_point_2 * cos(lng2 * unit_deg), -r_point_2 * sin(lng2 * unit_deg))
 
                 # Impose a maximum length of 4 cm on constellation stick figures; they get quite distorted at the edge
                 if hypot(p2[0] - p1[0], p2[1] - p1[1]) > 4 * unit_cm:
@@ -180,7 +190,7 @@ class StarWheel(BaseComponent):
 
         # Draw stars from Yale Bright Star Catalogue
         for star_descriptor in fetch_bright_star_list()['stars'].values():
-            [ra, dec, mag] = star_descriptor[:3]
+            ra, dec, mag = star_descriptor[:3]
 
             # Discard stars fainter than mag 4
             if mag == "-" or float(mag) > 4.0:
@@ -217,13 +227,13 @@ class StarWheel(BaseComponent):
                     continue
 
                 # Split line into words
-                [name, ra, dec] = line.split()[:3]
+                name, ra_str, dec_str = line.split()[:3]
 
                 # Translate constellation name into the requested language, if required
                 if name in text[language]['constellation_translations']:
                     name = text[language]['constellation_translations'][name]
 
-                lng, lat = self.ra_dec_to_ecliptic_coordinates(ra=ra, dec=dec)
+                lng, lat = self.ra_dec_to_ecliptic_coordinates(ra=float(ra_str), dec=float(dec_str))
 
                 # If we're making a southern hemisphere planisphere, we flip the sky upside down
                 if is_southern:
@@ -231,12 +241,12 @@ class StarWheel(BaseComponent):
                     lat *= -1
 
                 # Render name of constellation, with _s turned into spaces
-                name2 = re.sub("_", " ", name)
+                name2: str = re.sub("_", " ", name)
                 r = radius(dec=lat, latitude=latitude)
                 if r > r_2:
                     continue
-                p = (-r * cos(lng * unit_deg), -r * sin(lng * unit_deg))
-                a = atan2(p[0], p[1])
+                p: tuple[float, float] = (-r * cos(lng * unit_deg), -r * sin(lng * unit_deg))
+                a: float = atan2(p[0], p[1])
                 context.text(text=name2, x=p[0], y=p[1], h_align=0, v_align=0, gap=0, rotation=unit_rev / 2 - a)
 
         # Draw arrow for lining up with the year scale

@@ -17,7 +17,7 @@
 
 # ----------------------------------------------------------------------------
 
-themes = {
+themes: dict[str, dict[str, tuple[float, float, float, float]]] = {
     "default":
         {
             "background": (1, 1, 1, 0),

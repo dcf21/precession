@@ -4,7 +4,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2023 Dominic Ford <https://dcford.org.uk/>
+# Copyright (C) 2014-2024 Dominic Ford <https://dcford.org.uk/>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -19,7 +19,7 @@
 
 # A list of text strings, which we can render in various languages
 
-text = {
+text: dict[str, dict] = {
     "en":
         {
             "title": "PRECESSION OF THE EQUINOXES",

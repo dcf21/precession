@@ -5,7 +5,7 @@
 # The python script in this file makes the various parts of a precession
 # planisphere.
 #
-# Copyright (C) 2014-2023 Dominic Ford <https://dcford.org.uk/>
+# Copyright (C) 2014-2024 Dominic Ford <https://dcford.org.uk/>
 #
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -27,8 +27,9 @@ from math import pi, sin, cos, atan2, asin, hypot
 from numpy import arange
 
 from constants import radius, transform, pos
-from constants import unit_deg, unit_rev, unit_cm, unit_mm, inclination_ecliptic, r_1, r_2, fold_gap, central_hole_size, line_width_base
-from graphics_context import BaseComponent
+from constants import unit_deg, unit_rev, unit_cm, unit_mm, inclination_ecliptic, r_1, r_2, fold_gap, central_hole_size, \
+    line_width_base
+from graphics_context import BaseComponent, GraphicsContext
 from settings import fetch_command_line_arguments
 from text import text
 
@@ -38,13 +39,13 @@ class Holder(BaseComponent):
     Render the holder for the precession planisphere.
     """
 
-    def default_filename(self):
+    def default_filename(self) -> str:
         """
         Return the default filename to use when saving this component.
         """
         return "holder"
 
-    def bounding_box(self, settings):
+    def bounding_box(self, settings: dict) -> dict[str, float]:
         """
         Return the bounding box of the canvas area used by this component.
 
@@ -54,7 +55,7 @@ class Holder(BaseComponent):
          Dictionary with the elements 'x_min', 'x_max', 'y_min' and 'y_max' set
         """
 
-        h = r_1 + fold_gap
+        h: float = r_1 + fold_gap
 
         return {
             'x_min': -r_1 - 4 * unit_mm,
@@ -63,7 +64,7 @@ class Holder(BaseComponent):
             'y_max': h + 1.2 * unit_cm
         }
 
-    def do_rendering(self, settings, context):
+    def do_rendering(self, settings: dict, context: GraphicsContext) -> None:
         """
         This method is required to actually render this item.
 
@@ -75,14 +76,14 @@ class Holder(BaseComponent):
             None
         """
 
-        is_southern = settings['southern']
-        latitude = 90 - inclination_ecliptic
-        language = settings['language']
+        is_southern: bool = settings['southern']
+        latitude: float = 90 - inclination_ecliptic
+        language: str = settings['language']
 
         context.set_font_size(0.9)
 
-        a = 6 * unit_cm
-        h = r_1 + fold_gap
+        a: float = 6 * unit_cm
+        h: float = r_1 + fold_gap
 
         # Draw dotted line for folding the bottom of the planisphere
         context.begin_path()
@@ -99,7 +100,7 @@ class Holder(BaseComponent):
         context.stroke(dotted=False)
 
         # Draw the curved upper part of the body of the planisphere
-        theta = unit_rev / 2 - atan2(r_1, h - a)
+        theta: float = unit_rev / 2 - atan2(r_1, h - a)
         context.begin_path()
         context.arc(centre_x=0, centre_y=-h, radius=r_2, arc_from=-theta - pi / 2, arc_to=theta - pi / 2)
         context.move_to(x=-r_2 * sin(theta), y=-h - r_2 * cos(theta))
@@ -109,12 +110,14 @@ class Holder(BaseComponent):
         context.stroke()
 
         # Shade the viewing window which needs to be cut out
-        x0 = (0, h)
+        x0: tuple[float, float] = (0, h)
         context.begin_path()
+        i: int
+        az: float
         for i, az in enumerate(arange(0, 360.5, 1)):
-            pp = transform(alt=0, az=az, latitude=latitude)
-            r = radius(dec=pp[1] / unit_deg, latitude=latitude)
-            p = pos(r=r, t=pp[0])
+            pp: tuple[float, float] = transform(alt=0, az=az, latitude=latitude)
+            r: float = radius(dec=pp[1] / unit_deg, latitude=latitude)
+            p: dict[str, float] = pos(r=r, t=pp[0])
             if i == 0:
                 context.move_to(x0[0] + p['x'], -x0[1] + p['y'])
             else:
@@ -123,7 +126,7 @@ class Holder(BaseComponent):
         context.fill(color=(0, 0, 0, 0.2))
 
         # Display instructions for cutting out the viewing window
-        instructions = text[language]["cut_out_instructions"]
+        instructions: str = text[language]["cut_out_instructions"]
         context.set_color(color=(0, 0, 0, 1))
         context.text_wrapped(text=instructions,
                              width=4 * unit_cm, justify=0,
@@ -131,17 +134,17 @@ class Holder(BaseComponent):
                              h_align=0, v_align=0, rotation=0)
 
         # Cardinal points
-        def cardinal(dir, ang):
-            pp = transform(alt=0, az=ang - 0.01, latitude=latitude)
-            r = radius(dec=pp[1] / unit_deg, latitude=latitude)
-            p = pos(r, pp[0])
+        def cardinal(dir: str, ang: float) -> None:
+            pp: tuple[float, float] = transform(alt=0, az=ang - 0.01, latitude=latitude)
+            r: float = radius(dec=pp[1] / unit_deg, latitude=latitude)
+            p: dict[str, float] = pos(r, pp[0])
 
-            pp2 = transform(alt=0, az=ang + 0.01, latitude=latitude)
-            r2 = radius(dec=pp2[1] / unit_deg, latitude=latitude)
-            p2 = pos(r=r2, t=pp2[0])
+            pp2: tuple[float, float] = transform(alt=0, az=ang + 0.01, latitude=latitude)
+            r2: float = radius(dec=pp2[1] / unit_deg, latitude=latitude)
+            p2: dict[str, float] = pos(r=r2, t=pp2[0])
 
-            p3 = [p2[i] - p[i] for i in ('x', 'y')]
-            tr = -unit_rev / 4 - atan2(p3[0], p3[1])
+            p3: list[float] = [p2[i] - p[i] for i in ('x', 'y')]
+            tr: float = -unit_rev / 4 - atan2(p3[0], p3[1])
 
             context.text(text=dir, x=x0[0] + p['x'], y=-x0[1] + p['y'],
                          h_align=0, v_align=1, gap=unit_mm, rotation=tr)
@@ -151,26 +154,26 @@ class Holder(BaseComponent):
 
         for ra_hour in range(0, 24, 3):
             if ra_hour != 18:
-                txt = "RA {:d}h".format(ra_hour)
-                cardinal(txt, (180-ra_hour*180/12) if not is_southern else (0-ra_hour*180/12))
+                txt: str = "RA {:.0f}h".format(float(ra_hour))
+                cardinal(txt, (180 - ra_hour * 180 / 12) if not is_southern else (0 - ra_hour * 180 / 12))
 
         context.set_font_style(bold=False)
 
         # Clock face, which lines up with the date scale on the star wheel
-        theta = unit_rev / 25772 * 6000  # Cover 6000 years on either side of J2000
-        dash = unit_rev / 25772 * 500  # Draw fat dashes at 500 minute intervals
+        theta: float = unit_rev / 25772 * 6000  # Cover 6000 years on either side of J2000
+        dash: float = unit_rev / 25772 * 500  # Draw fat dashes at 500 minute intervals
 
         # Outer edge of dashed scale
-        r_3 = r_2 - 2 * unit_mm
+        r_3: float = r_2 - 2 * unit_mm
 
         # Inner edge of dashed scale
-        r_4 = r_2 - 3 * unit_mm
+        r_4: float = r_2 - 3 * unit_mm
 
         # Radius of dashes for marking hours
-        r_5 = r_2 - 4 * unit_mm
+        r_5: float = r_2 - 4 * unit_mm
 
         # Radius of text marking hours
-        r_6 = r_2 - 5.5 * unit_mm
+        r_6: float = r_2 - 5.5 * unit_mm
 
         # Inner and outer curves around dashed scale
         context.begin_path()
@@ -187,8 +190,8 @@ class Holder(BaseComponent):
 
         # Write the years
         for year in arange(-4000, 8000, 1000):
-            txt = "{:d}{}".format(abs(year), "CE" if (year >= 0) else "BCE")
-            t = unit_rev / 25772 * (year-2000) * (-1 if is_southern else 1)
+            txt: str = "{:d}{}".format(abs(year), "CE" if (year >= 0) else "BCE")
+            t: float = unit_rev / 25772 * (year - 2000) * (-1 if is_southern else 1)
 
             # Stroke a dash and write the number of the hour
             context.begin_path()
@@ -198,9 +201,9 @@ class Holder(BaseComponent):
             context.text(text=txt, x=r_6 * sin(t), y=-h - r_6 * cos(t), h_align=0, v_align=0, gap=0, rotation=t)
 
         # Back edge
-        b = unit_cm
-        t1 = atan2(h - a, r_1)
-        t2 = asin(b / hypot(r_1, h - a))
+        b: float = unit_cm
+        t1: float = atan2(h - a, r_1)
+        t2: float = asin(b / hypot(r_1, h - a))
         context.begin_path()
         context.move_to(x=-r_1, y=a)
         context.line_to(x=-b * sin(t1 + t2), y=h + b * cos(t1 + t2))
@@ -246,7 +249,7 @@ class Holder(BaseComponent):
             h_align=0, v_align=1, rotation=0.5 * unit_rev)
 
         # Display web link and copyright text
-        txt = text[language]['more_info']
+        txt: str = text[language]['more_info']
         context.set_font_size(0.9)
         context.text(text=txt, x=0, y=-0.5 * unit_cm, h_align=0, v_align=0, gap=0, rotation=0)
         context.set_font_size(0.9)
