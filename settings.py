@@ -23,8 +23,10 @@ Define a common command-line interface which is shared between all the scripts.
 
 import argparse
 
+from typing import Dict
 
-def fetch_command_line_arguments(default_filename: str = '') -> dict[str, str]:
+
+def fetch_command_line_arguments(default_filename: str = '') -> Dict[str, str]:
     """
     Read input parameters from the command line
 

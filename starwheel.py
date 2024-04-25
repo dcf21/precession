@@ -24,6 +24,7 @@ Render the star wheel for the precession planisphere.
 
 import re
 from math import pi, sin, cos, atan2, asin, hypot
+from typing import Dict, Tuple
 
 from bright_stars_process import fetch_bright_star_list
 from constants import unit_deg, unit_rev, unit_mm, unit_cm, inclination_ecliptic, r_1, r_gap, central_hole_size, radius
@@ -44,7 +45,7 @@ class StarWheel(BaseComponent):
         """
         return "star_wheel"
 
-    def bounding_box(self, settings: dict) -> dict[str, float]:
+    def bounding_box(self, settings: dict) -> Dict[str, float]:
         """
         Return the bounding box of the canvas area used by this component.
 
@@ -61,7 +62,7 @@ class StarWheel(BaseComponent):
         }
 
     @staticmethod
-    def ra_dec_to_ecliptic_coordinates(ra: float, dec: float) -> tuple[float, float]:
+    def ra_dec_to_ecliptic_coordinates(ra: float, dec: float) -> Tuple[float, float]:
         ra = float(ra)
         dec = float(dec)
 
@@ -96,7 +97,7 @@ class StarWheel(BaseComponent):
         is_southern: bool = settings['southern']
         language: str = settings['language']
         latitude: float = 90 - inclination_ecliptic
-        theme: dict[str, tuple[float, float, float, float]] = themes[settings['theme']]
+        theme: Dict[str, Tuple[float, float, float, float]] = themes[settings['theme']]
 
         context.set_font_size(1.2)
 
@@ -175,8 +176,8 @@ class StarWheel(BaseComponent):
                 if r_point_2 > r_2:
                     continue
 
-                p1: tuple[float, float] = (-r_point_1 * cos(lng1 * unit_deg), -r_point_1 * sin(lng1 * unit_deg))
-                p2: tuple[float, float] = (-r_point_2 * cos(lng2 * unit_deg), -r_point_2 * sin(lng2 * unit_deg))
+                p1: Tuple[float, float] = (-r_point_1 * cos(lng1 * unit_deg), -r_point_1 * sin(lng1 * unit_deg))
+                p2: Tuple[float, float] = (-r_point_2 * cos(lng2 * unit_deg), -r_point_2 * sin(lng2 * unit_deg))
 
                 # Impose a maximum length of 4 cm on constellation stick figures; they get quite distorted at the edge
                 if hypot(p2[0] - p1[0], p2[1] - p1[1]) > 4 * unit_cm:
@@ -245,7 +246,7 @@ class StarWheel(BaseComponent):
                 r = radius(dec=lat, latitude=latitude)
                 if r > r_2:
                     continue
-                p: tuple[float, float] = (-r * cos(lng * unit_deg), -r * sin(lng * unit_deg))
+                p: Tuple[float, float] = (-r * cos(lng * unit_deg), -r * sin(lng * unit_deg))
                 a: float = atan2(p[0], p[1])
                 context.text(text=name2, x=p[0], y=p[1], h_align=0, v_align=0, gap=0, rotation=unit_rev / 2 - a)
 

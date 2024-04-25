@@ -23,8 +23,8 @@ Render the optional ra-dec grid of the precession planisphere.
 """
 
 from math import atan2
-
 from numpy import arange
+from typing import Dict, List, Tuple
 
 from constants import radius, transform, pos
 from constants import unit_deg, unit_rev, unit_mm, inclination_ecliptic, central_hole_size
@@ -44,7 +44,7 @@ class RaDecGrid(BaseComponent):
         """
         return "ra_dec_grid"
 
-    def bounding_box(self, settings: dict) -> dict[str, float]:
+    def bounding_box(self, settings: dict) -> Dict[str, float]:
         """
         Return the bounding box of the canvas area used by this component.
 
@@ -56,7 +56,7 @@ class RaDecGrid(BaseComponent):
 
         latitude: float = 90 - inclination_ecliptic
 
-        bounding_box: dict[str, float] = {
+        bounding_box: Dict[str, float] = {
             'x_min': 0,
             'x_max': 0,
             'y_min': 0,
@@ -66,13 +66,13 @@ class RaDecGrid(BaseComponent):
         # Trace around the equator, keeping track of minimum and maximum coordinates
         dec_edge: float = -12
 
-        path: list[tuple[float, float]] = [
+        path: List[Tuple[float, float]] = [
             transform(alt=dec_edge, az=az, latitude=latitude) for az in arange(0, 360.5, 1)
         ]
 
         for p in path:
             r_b: float = radius(dec=p[1] / unit_deg, latitude=latitude)
-            position: dict[str, float] = pos(r_b, p[0])
+            position: Dict[str, float] = pos(r_b, p[0])
             bounding_box['x_min'] = min(bounding_box['x_min'], position['x'])
             bounding_box['x_max'] = max(bounding_box['x_max'], position['x'])
             bounding_box['y_min'] = min(bounding_box['y_min'], position['y'])
@@ -105,7 +105,7 @@ class RaDecGrid(BaseComponent):
         dec: float
         for dec in (dec_edge, 0):
             # Draw a line, segment by segment, taking small steps in azimuth
-            path: list[tuple[float, float]] = [
+            path: List[Tuple[float, float]] = [
                 transform(alt=dec, az=ra, latitude=latitude) for ra in arange(0, 360.5, ra_step)
             ]
 
@@ -131,7 +131,7 @@ class RaDecGrid(BaseComponent):
         # Draw lines of constant declination
         context.begin_path()
         for dec in range(10, 85, 10):
-            path: list[tuple[float, float]] = [
+            path: List[Tuple[float, float]] = [
                 transform(alt=dec, az=ra, latitude=latitude) for ra in arange(0, 360.5, 1)
             ]
             for i, p in enumerate(path):
@@ -145,7 +145,7 @@ class RaDecGrid(BaseComponent):
         # Draw lines of constant right ascension, and 1 hour intervals
         context.begin_path()
         for ra in arange(0, 359, 15):
-            path: list[tuple[float, float]] = [
+            path: List[Tuple[float, float]] = [
                 transform(alt=dec, az=ra, latitude=latitude) for dec in arange(0, 90.1, 1)
             ]
             for i, p in enumerate(path):
@@ -158,15 +158,15 @@ class RaDecGrid(BaseComponent):
 
         # Gluing labels
         def make_gluing_label(azimuth: float) -> None:
-            pp: tuple[float, float] = transform(alt=0, az=azimuth - 0.01, latitude=latitude)
+            pp: Tuple[float, float] = transform(alt=0, az=azimuth - 0.01, latitude=latitude)
             r: float = radius(dec=pp[1] / unit_deg, latitude=latitude)
-            p: dict[str, float] = pos(r, pp[0])
+            p: Dict[str, float] = pos(r, pp[0])
 
-            pp2: tuple[float, float] = transform(alt=0, az=azimuth + 0.01, latitude=latitude)
+            pp2: Tuple[float, float] = transform(alt=0, az=azimuth + 0.01, latitude=latitude)
             r2: float = radius(dec=pp2[1] / unit_deg, latitude=latitude)
-            p2: dict[str, float] = pos(r2, pp2[0])
+            p2: Dict[str, float] = pos(r2, pp2[0])
 
-            p3: list[float] = [p2[i] - p[i] for i in ('x', 'y')]
+            p3: List[float] = [p2[i] - p[i] for i in ('x', 'y')]
             tr: float = -unit_rev / 4 - atan2(p3[0], p3[1])
 
             context.text(text=text[language]["glue_here"],

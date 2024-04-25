@@ -25,13 +25,15 @@ northern and southern skies. They are rendered in PDF, SVG and PNG image
 formats.
 
 Additionally, we use LaTeX to build a summary document for each hemisphere,
-which includes all of the parts needed to build a planisphere for that
+which includes all the parts needed to build a planisphere for that
 hemisphere, and instructions as to how to put them together.
 """
 
 import os
 import subprocess
 import time
+
+from typing import Dict, Union
 
 import text
 from ra_dec import RaDecGrid
@@ -43,7 +45,7 @@ from starwheel import StarWheel
 os.system("rm -Rf output")
 os.system("mkdir -p output/planispheres output/planisphere_parts")
 
-arguments: dict[str, int | str] = fetch_command_line_arguments()
+arguments: Dict[str, Union[int, str]] = fetch_command_line_arguments()
 theme: str = arguments['theme']
 
 # Render planisphere in all available languages
@@ -55,7 +57,7 @@ for language in text.text:
     for southern in [False, True]:
 
         # A dictionary of common substitutions
-        subs: dict[str, str | float] = {
+        subs: Dict[str, Union[str, float]] = {
             'dir_parts': 'output/planisphere_parts',
             'dir_out': 'output/planispheres',
             'ns': "S" if southern else "N",
@@ -63,7 +65,7 @@ for language in text.text:
             'lang': language,
         }
 
-        settings: dict[str, str | bool] = {
+        settings: Dict[str, Union[str, bool]] = {
             'language': language,
             'southern': southern,
             'theme': theme
